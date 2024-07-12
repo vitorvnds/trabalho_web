@@ -1,0 +1,156 @@
+<div class="container mt-4">
+  <h2>Lista de Serviços
+    <button class="btn btn-dark btn-arrendondamento"
+            (click)="openModal();form.reset()">
+      <i class="fas fa-plus"></i>
+      Novo Serviço
+    </button>
+  </h2>
+  <table class="table table-striped table-hover">
+    <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Serviço</th>
+      <th scope="col">Data Inicio</th>
+      <th scope="col">Status</th>
+      <th>Ações <i class="fas fa-cog"></i></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let t of servicos; let i = index">
+      <th scope="row"> {{ i + 1}}</th>
+      <td>{{ t.nome }}</td>
+      <td>{{ t.dataInicio | date: 'dd/MM/yyyy'}}</td>
+      <td> {{ t.status }}</td>
+      <td>
+        <!--BOTÃO DE DELETAR-->
+        <button class="btn btn-danger rounded-circle" (click)="excluirServico(t.id)">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+        <!-- BOTÃO DE EDITAR -->
+        - <button class="btn btn-warning rounded-circle" (click)="carregarDadosServico(t)">
+        <i class="fas fa-edit"></i>
+      </button>
+        <!-- BOTÃO DE VISUALIZAR -->
+        - <button type="button" class="btn btn-primary rounded-circle"
+                  data-toggle="modal" data-target="#servicoModal" (click)="setServicoAtual(t)">
+        <i class="fas fa-eye"></i>
+      </button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<div *ngIf="false" class="d-flex justify-content-center">
+  <i class="fas fa-spinner fa-spin fa-3x fa-fw"></i>
+  <h3>CARREGANDO...</h3>
+</div>
+
+<!-- MODAL DE CADASTRO/EDIÇÃO -->
+<div class="modal" tabindex="-1" id="add-tarefa">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          <ng-container *ngIf="form.value.id > 0; else novoServico">
+            Editar Serviço
+          </ng-container>
+          <ng-template #novoServico>
+            Adicionar Serviço
+          </ng-template>
+        </h5>
+      </div>
+      <form [formGroup]="form" (ngSubmit)="submitForm()">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="mb-3 col-md-12">
+              <label class="form-label">Titulo Serviço</label>
+              <input type="text" class="form-control" formControlName="nomeServico">
+              <div class="text-danger" *ngIf="isCampoValido('nomeServico')">
+                Campo Obrigatório
+              </div>
+            </div>
+            <div class="mb-3 col-md-6">
+              <label class="form-label">Data Inicio</label>
+              <input type="datetime-local" class="form-control" formControlName="dataInicioServico">
+              <div class="text-danger" *ngIf="isCampoValido('dataInicioServico')">
+                Campo Obrigatório
+              </div>
+            </div>
+            <div class="mb-3 col-md-6">
+              <label class="form-label">Data Conclusão</label>
+              <input type="datetime-local" class="form-control" formControlName="dataConclusaoServico">
+              <div class="text-danger" *ngIf="isCampoValido('dataConclusaoServico')">
+                Campo Obrigatório
+              </div>
+            </div>
+            <div class="md-3 col">
+              <label>Status</label>
+              <select class="form-control" formControlName="statusServico">
+                <option value="NOVA">Nova</option>
+                <option value="EM_ANDAMENTO">Em Andamento</option>
+                <option value="CONCLUIDA">Concluída</option>
+              </select>
+              <div class="text-danger" *ngIf="isCampoValido('statusServico')">
+                Campo Obrigatório
+              </div>
+            </div>
+            <div class="mb-12 col-md-12">
+              <label class="form-check-label">
+                Descrição tarefa
+              </label>
+              <textarea class="form-control" rows="3"
+                        formControlName="descricaoServico"></textarea>
+              <div class="text-danger" *ngIf="isCampoValido('descricaoServico')">
+                Campo Obrigatório
+              </div>
+            </div>
+            <div class="md-3 col">
+              <hr>
+              <input type="file" accept="image/*" (change)="onFileChange($event)">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-bs-dismiss="modal"
+                  (click)="closeModal()">Fechar</button>
+          <button class="btn btn-success" type="submit">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE VISUALIZAR TAREFA -->
+<div class="modal fade" id="servicoModal" tabindex="-1" role="dialog"
+     aria-labelledby="visualizar" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="visualizar">Detalhes da Servico</h5>
+        <button class="close" type="button" data-dismiss="modal" arial-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p> <strong>Título:</strong>  {{ servicoVisualizar?.titulo }} </p>
+        <p> <strong>Descrição:</strong>  {{ servicoVisualizar?.descricao }} </p>
+        <p> <strong>Status:</strong>  {{ servicoVisualizar?.status }} </p>
+
+        <p> <strong>Data de Início:</strong>
+          {{ servicoVisualizar?.dataInicio | date: 'dd/MM/yyyy'}} </p>
+
+        <p> <strong>Data de Conclusão:</strong>
+          {{ servicoVisualizar?.dataConclusao | date: 'dd/MM/yyyy HH:mm:ss'}} </p>
+
+        <img [src]="servicoVisualizar?.imagem" alt="Imagem do serviço"
+             *ngIf="servicoVisualizar?.imagem"
+             style="max-width: 100%; max-height: 300px; height: auto;">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+      </div>
+    </div>
+  </div>
+</div>

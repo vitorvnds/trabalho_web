@@ -1,0 +1,30 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-secondary">
+  <a class="navbar-brand" href="#">
+    <img src="../../images/luciano-rodas.svg" width="150" height="50" alt="Logo">
+  </a>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item active">
+        <a class="nav-link" [routerLink]="'pagina-inicial'"
+           [routerLinkActive]="'active'" >Página inicial</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="'visualizar-servico'"
+           [routerLinkActive]="'active'" >Serviço</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="'visualizar-tarefas'"
+           [routerLinkActive]="'active'" >Visualizar Tarefas</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" [routerLink]="'fale-conosco'"
+           [routerLinkActive]="'active'" >Fale Conosco</a>
+      </li>
+    </ul>
+  </div>
+  <div class="mt-2 mt-md-0">
+    <a class="nav-link btn-dark rounded" [routerLink]="'login'"
+       [routerLinkActive]="'active'" >Login</a>
+  </div>
+</nav>
+
